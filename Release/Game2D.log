@@ -1,0 +1,31 @@
+﻿  Main.cpp
+c:\users\dougm\downloads\game2d\Image.h(73): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(76): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(78): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(89): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(91): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(99): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(107): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(116): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(120): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(124): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(133): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(137): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(139): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(156): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(157): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\dougm\downloads\game2d\Image.h(158): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+Main.cpp(102): warning C4018: '<': signed/unsigned mismatch
+Main.cpp(111): warning C4018: '<': signed/unsigned mismatch
+Main.cpp(154): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+Main.cpp(172): warning C4018: '<': signed/unsigned mismatch
+Main.cpp(223): warning C4018: '<': signed/unsigned mismatch
+Main.cpp(239): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+Main.cpp(271): warning C4018: '<': signed/unsigned mismatch
+Main.cpp(280): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+Main.cpp(282): warning C4018: '<': signed/unsigned mismatch
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
+  Game2D.vcxproj -> C:\Users\dougm\Downloads\Game2D\Release\Game2D.exe
+  Game2D.vcxproj -> C:\Users\dougm\Downloads\Game2D\Release\Game2D.pdb (Full PDB)
