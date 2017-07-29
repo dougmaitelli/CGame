@@ -157,7 +157,7 @@ void geraInimigos() {
 		}
 
 		GameObject* inimigo = new GameObject();
-		inimigo->init(PTMReader::read("Personagem.ptm"));
+		inimigo->init(PTMReader::read("Graphics/Personagem.ptm"));
 		inimigo->setX(600);
 		inimigo->setY(300);
 		inimigo->setDirection(-1);
@@ -262,11 +262,11 @@ void initJogo(void) {
 	zbuffer = new int[scene->getWidth()*scene->getHeight()];
 	zbuffer2 = new int[scene->getWidth()*scene->getHeight()];
 
-	nuvem = PTMReader::read("Nuvens.ptm");
-	montanha = PTMReader::read("Montanhas.ptm");
-	plataforma2 = PTMReader::read("Plataforma2.ptm");
-	plataforma = PTMReader::read("Plataforma.ptm");
-	chao = PTMReader::read("Chao.ptm");
+	nuvem = PTMReader::read("Graphics/Nuvens.ptm");
+	montanha = PTMReader::read("Graphics/Montanhas.ptm");
+	plataforma2 = PTMReader::read("Graphics/Plataforma2.ptm");
+	plataforma = PTMReader::read("Graphics/Plataforma.ptm");
+	chao = PTMReader::read("Graphics/Chao.ptm");
 
 	for(int i = 0; i < layers.size(); i++)
 		layers[i] = new Layer();
@@ -285,7 +285,7 @@ void initJogo(void) {
 
 void initPersonagem(void) {
 	personagem = new GameObject();
-	personagem->init(PTMReader::read("Personagem.ptm"));
+	personagem->init(PTMReader::read("Graphics/Personagem.ptm"));
 	personagem->setX(150);
 	personagem->setY(300);
 }
