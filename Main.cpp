@@ -1,5 +1,4 @@
 #include <Windows.h>
-#include "include/GL/gl.h"
 #include "include/GL/glut.h"
 #include <iostream>
 #include <fstream>
