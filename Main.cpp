@@ -1,6 +1,6 @@
 #include <Windows.h>
-#include "GL/gl.h"
-#include "GL/glut.h"
+#include "include/GL/gl.h"
+#include "include/GL/glut.h"
 #include <iostream>
 #include <fstream>
 #include <math.h>
