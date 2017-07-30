@@ -1,4 +1,8 @@
-#include "Animation.h"
+#ifndef GAME_OBJECT_H
+#define GAME_OBJECT_H
+
+#include "Graphics/Animation.h"
+#include "Graphics/Image.h"
 
 class GameObject {
 public:
@@ -31,7 +35,7 @@ public:
 	}
 
 	Animation* getCurrentAnimation() {
-		return anim->at(estaPulando ? 3 : direction == -1 ? 1 : 2);
+		return anim->at(direction == -1 ? 1 : 2);
 	}
 
 	Image* getCurrentFrame() {
@@ -66,12 +70,12 @@ public:
 		this->direction = direction;
 	}
 
-	int getEstaPulando() {
-		return estaPulando;
+	int isJumping() {
+		return jumping;
 	}
 
-	void setEstaPulando(int estaPulando) {
-		this->estaPulando = estaPulando;
+	void setJumping(int jumping) {
+		this->jumping = jumping;
 	}
 
 private:
@@ -81,5 +85,7 @@ private:
 
 	int posX, posY;
 	int direction = 0;
-	int estaPulando = 0;
+	int jumping = 0;
 };
+
+#endif

@@ -1,4 +1,9 @@
+#ifndef GAME_ANIMATION_H
+#define GAME_ANIMATION_H
+
 #include <vector>
+
+#include "Image.h"
 
 using namespace std;
 
@@ -25,3 +30,5 @@ private:
 	vector<Image*> frames;
 	int num = 0;
 };
+
+#endif

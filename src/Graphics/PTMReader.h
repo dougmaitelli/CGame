@@ -1,5 +1,9 @@
+#ifndef GAME_PTM_READER_H
+#define GAME_PTM_READER_H
+
 #include <fstream>
 #include <string>
+
 #include "Image.h"
 
 using namespace std;
@@ -38,3 +42,5 @@ public:
 		return imagem;
 	}
 }; 
+
+#endif

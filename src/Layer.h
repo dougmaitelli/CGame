@@ -1,10 +1,15 @@
+#ifndef GAME_LAYER_H
+#define GAME_LAYER_H
+
+#include "Graphics/Image.h"
+
 class Layer {
 public:
 	void setImagem(Image *image) {
 		imagem = image;
 	}
 
-	Image * getImagem(void) {
+	Image * getImage(void) {
 		return imagem;
 	}
 
@@ -35,6 +40,9 @@ public:
 
 private:
 	Image *imagem;
+
 	float taxaX = 0;
 	float posX = 0;
 };
+
+#endif

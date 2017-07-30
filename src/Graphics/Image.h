@@ -1,3 +1,6 @@
+#ifndef GAME_IMAGE_H
+#define GAME_IMAGE_H
+
 class Image {
 public:
 	Image(int w, int h) {
@@ -187,3 +190,4 @@ private:
 	int width, height;
 };
 
+#endif
