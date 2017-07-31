@@ -42,8 +42,15 @@ public:
 		return (*getCurrentAnimation()).getFrame(currentFrame);
 	}
 
+	double lastTime = 0;
 	void incCurrentFrame() {
-		currentFrame = (currentFrame + 1) % (*getCurrentAnimation()).getNum();
+		double time = glfwGetTime();
+		double elapsedSeconds = time - lastTime;
+
+		if (elapsedSeconds > 0.1) {
+			currentFrame = (currentFrame + 1) % (*getCurrentAnimation()).getNum();
+			lastTime = time;
+		}
 	}
 
 	int getX(void) {

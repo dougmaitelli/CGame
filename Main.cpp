@@ -19,7 +19,7 @@ using namespace std;
 bool moving = false;
 
 int jumpStrength = 100;
-int velocity = 10;
+int velocity = 350;
 int jumpVelocity = 5;
 
 vector<Layer*> layers(5);
@@ -31,7 +31,6 @@ Image *clouds, *mountain, *ground, *platform, *backPlatform;
 Image *scene;
 
 GameObject *player;
-int frameCounter = 0;
 
 vector<GameObject*> enemies;
 
@@ -145,7 +144,7 @@ void generateEnemies() {
 		}
 
 		GameObject* enemy = new GameObject();
-		enemy->init(PTMReader::read("Graphics/Personagem.ptm"));
+		enemy->init(PTMReader::read("Graphics/Player.ptm"));
 		enemy->setX(600);
 		enemy->setY(300);
 		enemy->setDirection(-1);
@@ -156,12 +155,20 @@ void generateEnemies() {
 	}
 }
 
-void moveEnemies() {
+void moveEnemies(int movingOffeset) {
+	vector<int> enemiesToRemove;
+
 	for (unsigned int i = 0; i < enemies.size(); i++) {
-		enemies[i]->setX(enemies[i]->getX() - 2);
-		if (frameCounter >= 5) {
-			enemies[i]->incCurrentFrame();
+		enemies[i]->setX(enemies[i]->getX() - 2 - movingOffeset);
+		enemies[i]->incCurrentFrame();
+
+		if (enemies[i]->getX() < 0) {
+			enemiesToRemove.push_back(i);
 		}
+	}
+
+	for (unsigned int i = enemiesToRemove.size(); i > 0; i--) {
+		enemies.erase(enemies.begin() + enemiesToRemove[i] - 1);
 	}
 }
 
@@ -190,28 +197,32 @@ void calcGravity(GameObject* obj) {
 	}
 }
 
+double lastTime = 0;
 void update() {
-	int value = 0;
+	double time = glfwGetTime();
+	double elapsedSeconds = time - lastTime;
+
+	int movingValue = 0;
 
 	if (moving) {
-		value = player->getDirection() * velocity;
-	}
-
-	if (moving && frameCounter >= 5) {
+		movingValue = player->getDirection() * (int) ((double) velocity * elapsedSeconds);
 		player->incCurrentFrame();
-		frameCounter = 0;
+	} else {
+		lastTime = time;
 	}
-	frameCounter++;
 
 	calcGravity(player);
 	for (unsigned int i = 0; i < enemies.size(); i++) {
 		calcGravity(enemies[i]);
 	}
 
-	scroll(false, value);
+	if (movingValue > 0) {
+		scroll(false, movingValue);
+		lastTime = time;
+	}
 
 	generateEnemies();
-	moveEnemies();
+	moveEnemies(movingValue);
 }
 
 void initJogo() {

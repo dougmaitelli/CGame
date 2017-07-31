@@ -92,21 +92,6 @@ public:
 		}
 	}
 
-	void plotAnim(Image* foreground, int startxbg, int startybg, float startxfg, float startyfg, int *zbuffer, int z) {
-		for (int y = 0; y < (*foreground).getHeight(); y++) {
-			for (int x = 0; x < (*foreground).getWidth(); x++) {
-				float a = (float)((*foreground).getPixel(startxfg + x, startyfg + y) >> 24 & 0xff) / 255.0f;
-
-				if (z >= zbuffer[(startxbg + x) + (startybg + y)*(*this).getWidth()]) {
-					if (a == 1) 
-						(*this).setPixel((*foreground).getPixel(startxfg + x, startyfg + y), startxbg + x, startybg + y);
-					else if (a != 0)
-						(*this).interpolateColors(foreground, a, x, y, startxbg, startybg, startxfg, startyfg);
-				}
-			}
-		}
-	}
-
 	void interpolateColors(Image* foreground, float a, int x, int y, int startxbg, int startybg, int startxfg, int startyfg) {
 		int argb1 = (*this).getPixel(x, y);
 		int r1 = (argb1 >> 16) & 0xff;
