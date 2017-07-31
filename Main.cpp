@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <math.h>
 
+#include "include/glad/glad.h"
 #include "include/GLFW/glfw3.h"
 
 #include "src/Graphics/PTMReader.h"
@@ -28,7 +29,6 @@ Image *enemySpr;
 Image *clouds, *mountain, *ground, *platform, *backPlatform;
 
 Image *scene;
-int *zbuffer;
 
 GameObject *player;
 int frameCounter = 0;
@@ -83,14 +83,13 @@ int getGroundY(int x, int y) {
 	return groundY;
 }
 
-void sceneComposition(void) {
+void sceneComposition() {
 	(*scene).plotLayerRepeat(layers[0]->getImage(), 0, 0, layers[0]->getPosX(), 0);
-	clearZBuffer(zbuffer);
 
-	(*scene).plotLayerZBufferRepeat(layers[1]->getImage(), 0, 50, layers[1]->getPosX(), 0, zbuffer, 1);
-	(*scene).plotLayerZBufferRepeat(layers[2]->getImage(), 0, 50, layers[2]->getPosX(), 0, zbuffer, 2);
-	(*scene).plotLayerZBufferRepeat(layers[3]->getImage(), 0, 50, layers[3]->getPosX(), 0, zbuffer, 3);
-	(*scene).plotLayerZBufferRepeat(layers[4]->getImage(), 0, 0, layers[4]->getPosX(), 0, zbuffer, 4);
+	(*scene).plotLayerRepeat(layers[1]->getImage(), 0, 50, layers[1]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[2]->getImage(), 0, 50, layers[2]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[3]->getImage(), 0, 50, layers[3]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[4]->getImage(), 0, 0, layers[4]->getPosX(), 0);
 
 	(*scene).plot(player->getCurrentFrame(), player->getX(), player->getY());
 
@@ -215,10 +214,8 @@ void update() {
 	moveEnemies();
 }
 
-void initJogo(void) {
+void initJogo() {
 	scene = new Image(GAME_WIDTH, GAME_HEIGHT);
-
-	zbuffer = new int[scene->getWidth()*scene->getHeight()];
 
 	clouds = PTMReader::read("Graphics/Clouds.ptm");
 	mountain = PTMReader::read("Graphics/Mountain.ptm");
@@ -251,6 +248,8 @@ void initPersonagem(void) {
 int main(int argc, char** argv) {
 	GLFWwindow* window;
 
+	GLuint m_buffer, program;
+
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -270,10 +269,14 @@ int main(int argc, char** argv) {
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+	gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 	glfwSwapInterval(1);
 
 	initJogo();
 	initPersonagem();
+
+	program = glCreateProgram();
+	glLinkProgram(program);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window)) {
@@ -281,13 +284,14 @@ int main(int argc, char** argv) {
 
 		glfwGetFramebufferSize(window, &width, &height);
 
+		/* Render here */
 		glViewport(0, 0, width, height);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		update();
 		sceneComposition();
 
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(program);
 		glDrawPixels((*scene).getWidth(), (*scene).getHeight(), GL_BGRA_EXT, GL_UNSIGNED_BYTE, (*scene).getPixels());
 
 		/* Swap front and back buffers */
