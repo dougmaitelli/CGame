@@ -25,17 +25,21 @@ public:
 	}
 
 	void setPixel(int argb, int x, int y) {
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return;
+		}
+
 		pixels[x + y * width] = argb;
 	}
 
 	void setPixel(int r, int g, int b, int x, int y) {
 		int rgb = (r << 16) | (g << 8) | b;
-		pixels[x + y * width] = rgb;
+		setPixel(rgb, x, y);
 	}
 
 	void setPixel(int a, int r, int g, int b, int x, int y) {
 		int argb = (a << 24) | (r << 16) | (g << 8) | b;
-		pixels[x + y * width] = argb;
+		setPixel(argb, x, y);
 	}
 
 	int getPixelRepeat(int x, int y) {

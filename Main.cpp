@@ -162,7 +162,7 @@ void moveEnemies(int movingOffeset) {
 		enemies[i]->setX(enemies[i]->getX() - 2 - movingOffeset);
 		enemies[i]->incCurrentFrame();
 
-		if (enemies[i]->getX() < 0) {
+		if (enemies[i]->getX() < enemies[i]->getCurrentFrame()->getWidth() * -1) {
 			enemiesToRemove.push_back(i);
 		}
 	}
@@ -216,7 +216,7 @@ void update() {
 		calcGravity(enemies[i]);
 	}
 
-	if (movingValue > 0) {
+	if (movingValue != 0) {
 		scroll(false, movingValue);
 		lastTime = time;
 	}
