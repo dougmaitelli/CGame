@@ -17,26 +17,18 @@
 
 using namespace std;
 
+unsigned int playerMaxMarginFromX = 150;
 int jumpStrength = 100;
 int velocity = 350;
 int jumpVelocity = 5;
 
 vector<Layer*> layers(4);
 
-Image *playerSpr;
-Image *enemySpr;
-
 Image *scene;
 
 Player *player;
 
 vector<Enemy*> enemies;
-
-void clearZBuffer(int *zbuffer) {
-	for (int y = 0; y < scene->getHeight(); y++)
-		for (int x = 0; x < scene->getWidth(); x++)
-			zbuffer[x + y * scene->getWidth()] = 0;
-}
 
 int getGroundY(Layer* layer, int x, int layerOffset) {
 	int groundY = 0;
@@ -48,8 +40,7 @@ int getGroundY(Layer* layer, int x, int layerOffset) {
 		if ((pixel >> 24) != 0) {
 			groundStart = true;
 			groundY = i;
-		}
-		else if (groundStart) {
+		} else if (groundStart) {
 			break;
 		}
 	}
@@ -221,7 +212,16 @@ void update() {
 	}
 
 	if (movingValue != 0) {
-		scroll(false, movingValue);
+		if (layers[3]->getPosX() == 0 && movingValue < 0 || player->getX() < playerMaxMarginFromX && movingValue > 0) {
+			player->setX(player->getX() + movingValue);
+
+			if (player->getX() < 0) {
+				player->setX(0);
+			}
+		} else {
+			scroll(false, movingValue);
+		}
+
 		lastTime = time;
 	}
 
