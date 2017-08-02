@@ -21,11 +21,10 @@ int jumpStrength = 100;
 int velocity = 350;
 int jumpVelocity = 5;
 
-vector<Layer*> layers(5);
+vector<Layer*> layers(4);
 
 Image *playerSpr;
 Image *enemySpr;
-Image *clouds, *mountain, *ground, *platform, *backPlatform;
 
 Image *scene;
 
@@ -62,10 +61,10 @@ int getGroundY(Layer* layer, int x, int layerOffset) {
 	return groundY;
 }
 
-int getGroundY(int x, int y) {
-	int groundYG = getGroundY(layers[4], x, 0);
-	int groundYP = getGroundY(layers[3], x, 50);
-	int groundYBP = getGroundY(layers[2], x, 50);
+int getHigherGroundY(int x, int y) {
+	int groundYG = getGroundY(layers[3], x, 0);
+	int groundYP = getGroundY(layers[2], x, 64);
+	int groundYBP = getGroundY(layers[1], x, 64);
 	
 	int groundY = 0;
 	if (groundYG <= y + 7) {
@@ -81,13 +80,18 @@ int getGroundY(int x, int y) {
 	return groundY;
 }
 
-void sceneComposition() {
-	(*scene).plotLayerRepeat(layers[0]->getImage(), 0, 0, layers[0]->getPosX(), 0);
+int getLowerGroundY(int x) {
+	return getGroundY(layers[3], x, 0);
+}
 
-	(*scene).plotLayerRepeat(layers[1]->getImage(), 0, 50, layers[1]->getPosX(), 0);
-	(*scene).plotLayerRepeat(layers[2]->getImage(), 0, 50, layers[2]->getPosX(), 0);
-	(*scene).plotLayerRepeat(layers[3]->getImage(), 0, 50, layers[3]->getPosX(), 0);
-	(*scene).plotLayerRepeat(layers[4]->getImage(), 0, 0, layers[4]->getPosX(), 0);
+
+void sceneComposition() {
+	(*scene).fill(85, 170, 255);
+
+	(*scene).plotLayerRepeat(layers[0]->getImage(), 0, 0, layers[0]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[1]->getImage(), 0, 64, layers[1]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[2]->getImage(), 0, 64, layers[2]->getPosX(), 0);
+	(*scene).plotLayerRepeat(layers[3]->getImage(), 0, 0, layers[3]->getPosX(), 0);
 
 	(*scene).plot(player->getCurrentFrame(), player->getX(), player->getY());
 
@@ -109,21 +113,18 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 		if (key == GLFW_KEY_SPACE && player->getJumping() == 0 && !player->isFalling()) {
 			player->setJumping(jumpStrength);
-		}
-		else if (key == GLFW_KEY_S) {
+		} else if (key == GLFW_KEY_S && player->getY() > getLowerGroundY(player->getX())) {
 			player->setY(player->getY() - 15);
 		}
 
 		if (key == GLFW_KEY_A) {
 			player->setMoving(true);
 			player->setDirection(-1);
-		}
-		else if (key == GLFW_KEY_D) {
+		} else if (key == GLFW_KEY_D) {
 			player->setMoving(true);
 			player->setDirection(1);
 		}
-	}
-	else if (action == GLFW_RELEASE) {
+	} else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
 			player->setMoving(false);
 		}
@@ -135,7 +136,7 @@ std::uniform_int_distribution<int> distribution(1, 500);
 
 int posSinceLastEnemy = 0;
 void generateEnemies() {
-	if (layers[4]->getPosX() - posSinceLastEnemy > 100 && enemies.size() < 5) {
+	if (layers[3]->getPosX() - posSinceLastEnemy > 100 && enemies.size() < 5) {
 		int dice_roll = distribution(generator);
 
 		if (dice_roll != 1) {
@@ -143,14 +144,14 @@ void generateEnemies() {
 		}
 
 		Enemy* enemy = new Enemy();
-		enemy->init(GraphicReader::readPtm("Graphics/Enemy.ptm"));
+		enemy->init(GraphicReader::readImage("Graphics/enemy.png"));
 		enemy->setX(600);
 		enemy->setY(300);
 		enemy->setDirection(-1);
 
 		enemies.push_back(enemy);
 
-		posSinceLastEnemy = (int)layers[4]->getPosX();
+		posSinceLastEnemy = (int)layers[3]->getPosX();
 	}
 }
 
@@ -176,8 +177,8 @@ void calcGravity(GameObject* obj) {
 		obj->setJumping(player->getJumping() - jumpVelocity);
 		obj->setY(player->getY() + jumpVelocity);
 	} else if (obj->getY() > 0) {
-		int chaoYS = getGroundY(obj->getX() + 10, obj->getY());
-		int chaoYE = getGroundY(obj->getX() + 60, obj->getY());
+		int chaoYS = getHigherGroundY(obj->getX() + 10, obj->getY());
+		int chaoYE = getHigherGroundY(obj->getX() + 60, obj->getY());
 
 		int maxGround = max(chaoYS, chaoYE);
 
@@ -195,10 +196,6 @@ void calcGravity(GameObject* obj) {
 
 		if (obj->getY() < maxGround) {
 			obj->setY(maxGround);
-		}
-
-		if (obj->getY() < 50) {
-			obj->setY(50);
 		}
 	}
 }
@@ -235,25 +232,16 @@ void update() {
 void initJogo() {
 	scene = new Image(GAME_WIDTH, GAME_HEIGHT);
 
-	clouds = GraphicReader::readPtm("Graphics/Clouds.ptm");
-	mountain = GraphicReader::readPtm("Graphics/Mountain.ptm");
-	backPlatform = GraphicReader::readPtm("Graphics/BackPlatform.ptm");
-	platform = GraphicReader::readPtm("Graphics/Platform.ptm");
+	Image *clouds, *ground, *platform, *backPlatform;
+	clouds = GraphicReader::readImage("Graphics/clouds.png");
+	backPlatform = GraphicReader::readImage("Graphics/backPlatform.png");
+	platform = GraphicReader::readImage("Graphics/platform.png");
 	ground = GraphicReader::readImage("Graphics/ground.png");
 
-	for (unsigned int i = 0; i < layers.size(); i++)
-		layers[i] = new Layer();
-
-	layers[0]->setImagem(clouds);
-	layers[1]->setImagem(mountain);
-	layers[2]->setImagem(backPlatform);
-	layers[3]->setImagem(platform);
-	layers[4]->setImagem(ground);
-
-	float mainWidth = layers[4]->getImage()->getWidth();
-
-	for (unsigned int i = 0; i < layers.size(); i++)
-		layers[i]->setTaxaX(layers[i]->getImage()->getWidth() / mainWidth);
+	layers[0] = new Layer(clouds, 3);
+	layers[1] = new Layer(backPlatform, 2);
+	layers[2] = new Layer(platform, 1);
+	layers[3] = new Layer(ground, 0);
 }
 
 void initPersonagem(void) {

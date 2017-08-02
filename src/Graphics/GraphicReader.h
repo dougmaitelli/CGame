@@ -11,36 +11,6 @@ using namespace std;
 
 class GraphicReader {
 public:
-	static Image* readPtm(char *filename) {
-		ifstream arq(filename);
-
-		char buffer[256];
-		int w, h, mv, a, r, g, b;
-
-		arq >> buffer;
-
-		arq >> buffer;
-		if (buffer == "#")
-			arq >> w;
-		else
-			w = atoi(buffer);
-		arq >> h;
-		arq >> mv;
-
-		Image* image = new Image(w, h);
-
-		for (int y = (*image).getHeight() - 1; y >= 0; y--)
-			for (int x = 0; x < (*image).getWidth(); x++) {
-				arq >> a;
-				arq >> r;
-				arq >> g;
-				arq >> b;
-				(*image).setPixel(a, r, g, b, x, y);
-			}
-
-		return image;
-	}
-
 	static Image* readImage(char* filename) {
 		ILuint imageName;
 

@@ -8,19 +8,21 @@
 class Enemy : public GameObject {
 public:
 	void initAnimations(Image* sprite) {
-		animRun = new Animation(4, (*sprite).getWidth() / 4, (*sprite).getHeight() / 4);
-		(*sprite).subImage(animRun->getFrame(0), 0, 128);
-		(*sprite).subImage(animRun->getFrame(1), 64, 128);
-		(*sprite).subImage(animRun->getFrame(2), 128, 128);
-		(*sprite).subImage(animRun->getFrame(3), 192, 128);
+		animRunBack = new Animation(6, 76, 96);
+		(*sprite).subImageMirrored(animRunBack->getFrame(0), 1, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(1), 78, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(2), 155, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(3), 232, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(4), 309, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(5), 386, (*sprite).getHeight() - 100 - 96 - 1);
 	}
 
 	Animation* getCurrentAnimation() {
-		return animRun;
+		return animRunBack;
 	}
 
 private:
-	Animation* animRun;
+	Animation* animRunBack;
 };
 
 #endif

@@ -5,6 +5,13 @@
 
 class Layer {
 public:
+	Layer() {}
+
+	Layer(Image* image, unsigned int zIndex) {
+		this->image = image;
+		this->zIndex = zIndex;
+	}
+
 	void setImagem(Image* image) {
 		this->image = image;
 	}
@@ -14,11 +21,7 @@ public:
 	}
 
 	float getTaxaX() {
-		return taxaX;
-	}
-
-	void setTaxaX(float tx) {
-		taxaX = tx;
+		return 1.0 - (float) zIndex * 0.05;
 	}
 
 	float getPosX() {
@@ -31,17 +34,17 @@ public:
 	
 	void scroll(bool plus, int valor) {
 		if (plus) 
-			posX -= valor * taxaX;
+			posX -= valor * getTaxaX();
 		else 
-			posX += valor * taxaX;
+			posX += valor * getTaxaX();
 		if (posX < 0)
 			posX = 0;
 	}
 
 private:
 	Image* image;
+	unsigned int zIndex = 0;
 
-	float taxaX = 0;
 	float posX = 0;
 };
 

@@ -12,13 +12,21 @@ public:
 		(*sprite).subImage(animStand->getFrame(0), 1, (*sprite).getHeight() - 1 - 96 - 1);
 		(*sprite).subImage(animStand->getFrame(1), 78, (*sprite).getHeight() - 1 - 96 - 1);
 
-		animRun = new Animation(6, 76, 96);
-		(*sprite).subImage(animRun->getFrame(0), 1, (*sprite).getHeight() - 100 - 96 - 1);
-		(*sprite).subImage(animRun->getFrame(1), 78, (*sprite).getHeight() - 100 - 96 - 1);
-		(*sprite).subImage(animRun->getFrame(2), 155, (*sprite).getHeight() - 100 - 96 - 1);
-		(*sprite).subImage(animRun->getFrame(3), 232, (*sprite).getHeight() - 100 - 96 - 1);
-		(*sprite).subImage(animRun->getFrame(4), 309, (*sprite).getHeight() - 100 - 96 - 1);
-		(*sprite).subImage(animRun->getFrame(5), 386, (*sprite).getHeight() - 100 - 96 - 1);
+		animRunFront = new Animation(6, 76, 96);
+		(*sprite).subImage(animRunFront->getFrame(0), 1, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImage(animRunFront->getFrame(1), 78, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImage(animRunFront->getFrame(2), 155, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImage(animRunFront->getFrame(3), 232, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImage(animRunFront->getFrame(4), 309, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImage(animRunFront->getFrame(5), 386, (*sprite).getHeight() - 100 - 96 - 1);
+
+		animRunBack = new Animation(6, 76, 96);
+		(*sprite).subImageMirrored(animRunBack->getFrame(0), 1, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(1), 78, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(2), 155, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(3), 232, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(4), 309, (*sprite).getHeight() - 100 - 96 - 1);
+		(*sprite).subImageMirrored(animRunBack->getFrame(5), 386, (*sprite).getHeight() - 100 - 96 - 1);
 
 		animJump = new Animation(1, 76, 96);
 		(*sprite).subImage(animJump->getFrame(0), 309, (*sprite).getHeight() - 1 - 96 - 1);
@@ -33,7 +41,11 @@ public:
 		} else if (isFalling()) {
 			return animFall;
 		} else if (isMoving()) {
-			return animRun;
+			if (getDirection() < 0) {
+				return animRunBack;
+			}
+
+			return animRunFront;
 		} else {
 			return animStand;
 		}
@@ -41,7 +53,8 @@ public:
 
 private:
 	Animation* animStand;
-	Animation* animRun;
+	Animation* animRunFront;
+	Animation* animRunBack;
 	Animation* animJump;
 	Animation* animFall;
 };

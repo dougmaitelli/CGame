@@ -63,41 +63,41 @@ public:
 				float a = (float) ((*foreground).getPixel(x, y) >> 24 & 0xff) / 255.0f;
 
 				if (a == 1)
-					(*this).setPixel((*foreground).getPixel(x, y), startx + x, starty + y);
+					setPixel((*foreground).getPixel(x, y), startx + x, starty + y);
 				else if (a != 0) 
-					(*this).interpolateColors(foreground, a, x, y, startx, starty, 0, 0);
+					interpolateColors(foreground, a, x, y, startx, starty, 0, 0);
 			}
 		}
 	}
 
 	void plotLayer(Image* foreground, int startxbg, int startybg, float startxfg, float startyfg) {
 		for (int y = 0; y < (*foreground).getHeight(); y++) {
-			for (int x = 0; x < (*this).getWidth(); x++) {
+			for (int x = 0; x < getWidth(); x++) {
 				float a = (float)((*foreground).getPixel(startxfg + x, startyfg + y) >> 24 & 0xff) / 255.0f;
 
 				if (a == 1) 
-					(*this).setPixel((*foreground).getPixel(startxfg + x, startyfg + y), startxbg + x, startybg + y);
+					setPixel((*foreground).getPixel(startxfg + x, startyfg + y), startxbg + x, startybg + y);
 				else if (a != 0) 
-					(*this).interpolateColors(foreground, a, x, y, startxbg, startybg, startxfg, startyfg);
+					interpolateColors(foreground, a, x, y, startxbg, startybg, startxfg, startyfg);
 			}
 		}
 	}
 
 	void plotLayerRepeat(Image* foreground, int startxbg, int startybg, float startxfg, float startyfg) {
 		for (int y = 0; y < (*foreground).getHeight(); y++) {
-			for (int x = 0; x < (*this).getWidth(); x++) {
+			for (int x = 0; x < getWidth(); x++) {
 				float a = (float)((*foreground).getPixelRepeat(startxfg + x, startyfg + y) >> 24 & 0xff) / 255.0f;
 
 				if (a == 1)
-					(*this).setPixel((*foreground).getPixelRepeat(startxfg + x, startyfg + y), startxbg + x, startybg + y);
+					setPixel((*foreground).getPixelRepeat(startxfg + x, startyfg + y), startxbg + x, startybg + y);
 				else if (a != 0)
-					(*this).interpolateColors(foreground, a, x, y, startxbg, startybg, startxfg, startyfg);
+					interpolateColors(foreground, a, x, y, startxbg, startybg, startxfg, startyfg);
 			}
 		}
 	}
 
 	void interpolateColors(Image* foreground, float a, int x, int y, int startxbg, int startybg, int startxfg, int startyfg) {
-		int argb1 = (*this).getPixel(x, y);
+		int argb1 = getPixel(x, y);
 		int r1 = (argb1 >> 16) & 0xff;
 		int g1 = (argb1 >> 8) & 0xff;
 		int b1 = argb1 & 0xff;
@@ -111,14 +111,31 @@ public:
 		int g = g1*(1 - a) + g2*a;
 		int b = b1*(1 - a) + b2*a;
 
-		(*this).setPixel(255, r, g, b, startxbg + x, startybg + y);
+		setPixel(255, r, g, b, startxbg + x, startybg + y);
 	}
 
 	void subImage(Image* dest, int startx, int starty) {
 		for (int y = 0; y < (*dest).getHeight(); y++) {
 			for (int x = 0; x < (*dest).getWidth(); x++) {
-				int argbBG = (*this).getPixel(x + startx, y + starty);
+				int argbBG = getPixel(x + startx, y + starty);
 				(*dest).setPixel(argbBG, x, y);
+			}
+		}
+	}
+
+	void subImageMirrored(Image* dest, int startx, int starty) {
+		for (int y = 0; y < (*dest).getHeight(); y++) {
+			for (int x = 0; x < (*dest).getWidth(); x++) {
+				int argbBG = getPixel((*dest).getWidth() - x + startx - 1, y + starty);
+				(*dest).setPixel(argbBG, x, y);
+			}
+		}
+	}
+
+	void fill(int r, int g, int b) {
+		for (int y = 0; y < getHeight(); y++) {
+			for (int x = 0; x < getWidth(); x++) {
+				setPixel(r, g, b, x, y);
 			}
 		}
 	}
