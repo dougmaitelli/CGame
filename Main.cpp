@@ -7,16 +7,15 @@
 #include "include/glad/glad.h"
 #include "include/GLFW/glfw3.h"
 
-#include "src/Graphics/PTMReader.h"
-#include "src/GameObject.h"
+#include "src/Graphics/GraphicReader.h"
+#include "src/Player.h"
+#include "src/Enemy.h"
 #include "src/Layer.h"
 
 #define GAME_WIDTH 640
 #define GAME_HEIGHT 480
 
 using namespace std;
-
-bool moving = false;
 
 int jumpStrength = 100;
 int velocity = 350;
@@ -30,9 +29,9 @@ Image *clouds, *mountain, *ground, *platform, *backPlatform;
 
 Image *scene;
 
-GameObject *player;
+Player *player;
 
-vector<GameObject*> enemies;
+vector<Enemy*> enemies;
 
 void clearZBuffer(int *zbuffer) {
 	for (int y = 0; y < scene->getHeight(); y++)
@@ -108,7 +107,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		if(key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 
-		if (key == GLFW_KEY_SPACE && player->isJumping() == 0) {
+		if (key == GLFW_KEY_SPACE && player->getJumping() == 0 && !player->isFalling()) {
 			player->setJumping(jumpStrength);
 		}
 		else if (key == GLFW_KEY_S) {
@@ -116,17 +115,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		}
 
 		if (key == GLFW_KEY_A) {
-			moving = true;
+			player->setMoving(true);
 			player->setDirection(-1);
 		}
 		else if (key == GLFW_KEY_D) {
-			moving = true;
+			player->setMoving(true);
 			player->setDirection(1);
 		}
 	}
 	else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
-			moving = false;
+			player->setMoving(false);
 		}
 	}
 }
@@ -143,8 +142,8 @@ void generateEnemies() {
 			return;
 		}
 
-		GameObject* enemy = new GameObject();
-		enemy->init(PTMReader::read("Graphics/Player.ptm"));
+		Enemy* enemy = new Enemy();
+		enemy->init(GraphicReader::readPtm("Graphics/Player.ptm"));
 		enemy->setX(600);
 		enemy->setY(300);
 		enemy->setDirection(-1);
@@ -168,23 +167,30 @@ void moveEnemies(int movingOffeset) {
 	}
 
 	for (unsigned int i = enemiesToRemove.size(); i > 0; i--) {
-		enemies.erase(enemies.begin() + enemiesToRemove[i] - 1);
+		enemies.erase(enemies.begin() + enemiesToRemove[i]);
 	}
 }
 
 void calcGravity(GameObject* obj) {
-	if (obj->isJumping() > 0) {
-		obj->setJumping(player->isJumping() - jumpVelocity);
+	if (obj->getJumping() > 0) {
+		obj->setJumping(player->getJumping() - jumpVelocity);
 		obj->setY(player->getY() + jumpVelocity);
-	}
-	else if (obj->getY() > 0) {
+	} else if (obj->getY() > 0) {
 		int chaoYS = getGroundY(obj->getX() + 10, obj->getY());
 		int chaoYE = getGroundY(obj->getX() + 60, obj->getY());
 
 		int maxGround = max(chaoYS, chaoYE);
 
+		if (obj->getY() > maxGround + 50) {
+			obj->setFalling(true);
+		}
+
 		if (obj->getY() > maxGround) {
 			obj->setY(obj->getY() - jumpVelocity);
+		}
+
+		if (obj->getY() <= maxGround && obj->isFalling()) {
+			obj->setFalling(false);
 		}
 
 		if (obj->getY() < maxGround) {
@@ -204,12 +210,13 @@ void update() {
 
 	int movingValue = 0;
 
-	if (moving) {
+	if (player->isMoving()) {
 		movingValue = player->getDirection() * (int) ((double) velocity * elapsedSeconds);
-		player->incCurrentFrame();
 	} else {
 		lastTime = time;
 	}
+
+	player->incCurrentFrame();
 
 	calcGravity(player);
 	for (unsigned int i = 0; i < enemies.size(); i++) {
@@ -228,11 +235,11 @@ void update() {
 void initJogo() {
 	scene = new Image(GAME_WIDTH, GAME_HEIGHT);
 
-	clouds = PTMReader::read("Graphics/Clouds.ptm");
-	mountain = PTMReader::read("Graphics/Mountain.ptm");
-	backPlatform = PTMReader::read("Graphics/BackPlatform.ptm");
-	platform = PTMReader::read("Graphics/Platform.ptm");
-	ground = PTMReader::read("Graphics/Ground.ptm");
+	clouds = GraphicReader::readPtm("Graphics/Clouds.ptm");
+	mountain = GraphicReader::readPtm("Graphics/Mountain.ptm");
+	backPlatform = GraphicReader::readPtm("Graphics/BackPlatform.ptm");
+	platform = GraphicReader::readPtm("Graphics/Platform.ptm");
+	ground = GraphicReader::readPtm("Graphics/Ground.ptm");
 
 	for (unsigned int i = 0; i < layers.size(); i++)
 		layers[i] = new Layer();
@@ -250,8 +257,8 @@ void initJogo() {
 }
 
 void initPersonagem(void) {
-	player = new GameObject();
-	player->init(PTMReader::read("Graphics/Player.ptm"));
+	player = new Player();
+	player->init(GraphicReader::readImage("Graphics/player.png"));
 	player->setX(150);
 	player->setY(300);
 }

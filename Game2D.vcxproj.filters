@@ -32,10 +32,16 @@
     <ClInclude Include="src\Graphics\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\GraphicReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\PTMReader.h">
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,7 +11,7 @@ class Animation {
 public:
 	Animation() {}
 
-	Animation(int numFrames, int height, int width) {
+	Animation(int numFrames, int width, int height) {
 		for (int i = 0; i < numFrames; i++) {
 			frames.push_back(new Image(width, height));
 		}

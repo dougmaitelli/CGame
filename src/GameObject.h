@@ -1,42 +1,19 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include "Graphics/Animation.h"
 #include "Graphics/Image.h"
+#include "Graphics/Animation.h"
 
 class GameObject {
 public:
 	void init(Image* sprite) {
 		this->sprite = sprite;
 
-		anim->push_back(new Animation(4, (*sprite).getWidth() / 4, (*sprite).getHeight() / 4));
-		(*sprite).subImage(anim->at(0)->getFrame(0), 0, 192);
-		(*sprite).subImage(anim->at(0)->getFrame(1), 64, 192);
-		(*sprite).subImage(anim->at(0)->getFrame(2), 128, 192);
-		(*sprite).subImage(anim->at(0)->getFrame(3), 192, 192);
-
-		anim->push_back(new Animation(4, (*sprite).getWidth() / 4, (*sprite).getHeight() / 4));
-		(*sprite).subImage(anim->at(1)->getFrame(0), 0, 128);
-		(*sprite).subImage(anim->at(1)->getFrame(1), 64, 128);
-		(*sprite).subImage(anim->at(1)->getFrame(2), 128, 128);
-		(*sprite).subImage(anim->at(1)->getFrame(3), 192, 128);
-
-		anim->push_back(new Animation(4, (*sprite).getWidth() / 4, (*sprite).getHeight() / 4));
-		(*sprite).subImage(anim->at(2)->getFrame(0), 0, 64);
-		(*sprite).subImage(anim->at(2)->getFrame(1), 64, 64);
-		(*sprite).subImage(anim->at(2)->getFrame(2), 128, 64);
-		(*sprite).subImage(anim->at(2)->getFrame(3), 192, 64);
-
-		anim->push_back(new Animation(4, (*sprite).getWidth() / 4, (*sprite).getHeight() / 4));
-		(*sprite).subImage(anim->at(3)->getFrame(0), 0, 0);
-		(*sprite).subImage(anim->at(3)->getFrame(1), 64, 0);
-		(*sprite).subImage(anim->at(3)->getFrame(2), 128, 0);
-		(*sprite).subImage(anim->at(3)->getFrame(3), 192, 0);
+		initAnimations(sprite);
 	}
 
-	Animation* getCurrentAnimation() {
-		return anim->at(direction == -1 ? 1 : 2);
-	}
+	virtual void initAnimations(Image* sprite) = 0;
+	virtual Animation* getCurrentAnimation() = 0;
 
 	Image* getCurrentFrame() {
 		return (*getCurrentAnimation()).getFrame(currentFrame);
@@ -77,22 +54,42 @@ public:
 		this->direction = direction;
 	}
 
-	int isJumping() {
+	bool isMoving() {
+		return moving;
+	}
+
+	void setMoving(bool moving) {
+		this->moving = moving;
+		currentFrame = 0;
+	}
+
+	int getJumping() {
 		return jumping;
 	}
 
 	void setJumping(int jumping) {
 		this->jumping = jumping;
+		currentFrame = 0;
+	}
+
+	bool isFalling() {
+		return falling;
+	}
+
+	void setFalling(bool falling) {
+		this->falling = falling;
+		currentFrame = 0;
 	}
 
 private:
 	Image* sprite;
-	vector<Animation*> anim[4];
 	int currentFrame = 0;
 
 	int posX, posY;
 	int direction = 0;
+	bool moving = false;
 	int jumping = 0;
+	bool falling = false;
 };
 
 #endif
