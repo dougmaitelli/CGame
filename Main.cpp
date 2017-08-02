@@ -143,7 +143,7 @@ void generateEnemies() {
 		}
 
 		Enemy* enemy = new Enemy();
-		enemy->init(GraphicReader::readPtm("Graphics/Player.ptm"));
+		enemy->init(GraphicReader::readPtm("Graphics/Enemy.ptm"));
 		enemy->setX(600);
 		enemy->setY(300);
 		enemy->setDirection(-1);
@@ -239,7 +239,7 @@ void initJogo() {
 	mountain = GraphicReader::readPtm("Graphics/Mountain.ptm");
 	backPlatform = GraphicReader::readPtm("Graphics/BackPlatform.ptm");
 	platform = GraphicReader::readPtm("Graphics/Platform.ptm");
-	ground = GraphicReader::readPtm("Graphics/Ground.ptm");
+	ground = GraphicReader::readImage("Graphics/ground.png");
 
 	for (unsigned int i = 0; i < layers.size(); i++)
 		layers[i] = new Layer();
@@ -271,6 +271,8 @@ int main(int argc, char** argv) {
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
+
+	ilInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);

@@ -44,8 +44,6 @@ public:
 	static Image* readImage(char* filename) {
 		ILuint imageName;
 
-		ilInit();
-
 		ilGenImages(1, &imageName);
 		ilBindImage(imageName);
 
@@ -61,7 +59,7 @@ public:
 		ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, pixmap);
 
 		int a, r, g, b;
-
+			
 		for (int y = 0; y < (*image).getHeight(); y++)
 			for (int x = 0; x < (*image).getWidth(); x++) {
 				r = pixmap[(x + y * width) * 4 + 0];

@@ -5,15 +5,15 @@
 
 class Layer {
 public:
-	void setImagem(Image *image) {
-		imagem = image;
+	void setImagem(Image* image) {
+		this->image = image;
 	}
 
-	Image * getImage(void) {
-		return imagem;
+	Image* getImage() {
+		return image;
 	}
 
-	float getTaxaX(void) {
+	float getTaxaX() {
 		return taxaX;
 	}
 
@@ -21,7 +21,7 @@ public:
 		taxaX = tx;
 	}
 
-	float getPosX(void) {
+	float getPosX() {
 		return posX;
 	}
 
@@ -39,7 +39,7 @@ public:
 	}
 
 private:
-	Image *imagem;
+	Image* image;
 
 	float taxaX = 0;
 	float posX = 0;
