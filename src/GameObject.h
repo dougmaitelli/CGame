@@ -81,15 +81,33 @@ public:
 		currentFrame = 0;
 	}
 
+	void startShooting() {
+		if (!moving) {
+			currentFrame = 0;
+		}
+
+		shooting = true;
+	}
+
+	void stopShooting() {
+		shooting = false;
+	}
+
+	bool isShooting() {
+		return shooting;
+	}
+
 private:
 	Image* sprite;
 	int currentFrame = 0;
 
 	int posX, posY;
 	int direction = 0;
+
 	bool moving = false;
 	int jumping = 0;
 	bool falling = false;
+	bool shooting = false;
 };
 
 #endif

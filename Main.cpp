@@ -115,9 +115,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			player->setMoving(true);
 			player->setDirection(1);
 		}
+
+		if (key == GLFW_KEY_LEFT_CONTROL) {
+			player->startShooting();
+		}
 	} else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
 			player->setMoving(false);
+		}
+
+		if (key == GLFW_KEY_LEFT_CONTROL) {
+			player->stopShooting();
 		}
 	}
 }
