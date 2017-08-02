@@ -102,18 +102,20 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		if(key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 
-		if (key == GLFW_KEY_SPACE && player->getJumping() == 0 && !player->isFalling()) {
-			player->setJumping(jumpStrength);
-		} else if (key == GLFW_KEY_S && player->getY() > getLowerGroundY(player->getX())) {
-			player->setY(player->getY() - 15);
-		}
+		if (player->getJumping() == 0 && !player->isFalling()) {
+			if (key == GLFW_KEY_SPACE) {
+				player->setJumping(jumpStrength);
+			} else if (key == GLFW_KEY_S && player->getY() > getLowerGroundY(player->getX())) {
+				player->setY(player->getY() - 15);
+			}
 
-		if (key == GLFW_KEY_A) {
-			player->setMoving(true);
-			player->setDirection(-1);
-		} else if (key == GLFW_KEY_D) {
-			player->setMoving(true);
-			player->setDirection(1);
+			if (key == GLFW_KEY_A) {
+				player->setMoving(true);
+				player->setDirection(-1);
+			} else if (key == GLFW_KEY_D) {
+				player->setMoving(true);
+				player->setDirection(1);
+			}
 		}
 
 		if (key == GLFW_KEY_LEFT_CONTROL) {
