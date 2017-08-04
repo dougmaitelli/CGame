@@ -15,12 +15,8 @@ public:
 	virtual void initAnimations(Image* sprite) = 0;
 	virtual Animation* getCurrentAnimation() = 0;
 
-	Image* getCurrentFrame() {
-		return (*getCurrentAnimation()).getFrame(currentFrame);
-	}
-
 	double lastTime = 0;
-	void incCurrentFrame() {
+	Image* getCurrentFrame() {
 		double time = glfwGetTime();
 		double elapsedSeconds = time - lastTime;
 
@@ -28,6 +24,8 @@ public:
 			currentFrame = (currentFrame + 1) % (*getCurrentAnimation()).getNum();
 			lastTime = time;
 		}
+
+		return (*getCurrentAnimation()).getFrame(currentFrame);
 	}
 
 	int getX(void) {

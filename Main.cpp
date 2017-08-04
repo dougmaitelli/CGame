@@ -9,6 +9,7 @@
 
 #include "src/Graphics/GraphicReader.h"
 #include "src/Player.h"
+#include "src/Shot.h"
 #include "src/Enemy.h"
 #include "src/Layer.h"
 
@@ -27,7 +28,9 @@ vector<Layer*> layers(4);
 Image *scene;
 
 Player *player;
+vector<Shot*> shots;
 
+Image* enemySpr;
 vector<Enemy*> enemies;
 
 int getGroundY(Layer* layer, int x, int layerOffset) {
@@ -89,6 +92,10 @@ void sceneComposition() {
 	for (unsigned int i = 0; i < enemies.size(); i++) {
 		(*scene).plot(enemies[i]->getCurrentFrame(), enemies[i]->getX(), enemies[i]->getY());
 	}
+
+	for (unsigned int i = 0; i < shots.size(); i++) {
+		(*scene).plot(shots[i]->getCurrentFrame(), shots[i]->getX(), shots[i]->getY());
+	}
 }
 
 void scroll(bool plus, int value) {
@@ -120,6 +127,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 		if (key == GLFW_KEY_LEFT_CONTROL) {
 			player->startShooting();
+
+			Shot* shot = new Shot();
+			shot->init(GraphicReader::readImage("Graphics/shot.png"));
+			shot->setX(player->getX() + 50);
+			shot->setY(player->getY());
+			shot->setDirection(1);
+
+			shots.push_back(shot);
 		}
 	} else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
@@ -145,8 +160,8 @@ void generateEnemies() {
 		}
 
 		Enemy* enemy = new Enemy();
-		enemy->init(GraphicReader::readImage("Graphics/enemy.png"));
-		enemy->setX(600);
+		enemy->init(enemySpr);
+		enemy->setX(800);
 		enemy->setY(300);
 		enemy->setDirection(-1);
 
@@ -161,7 +176,6 @@ void moveEnemies(int movingOffeset) {
 
 	for (unsigned int i = 0; i < enemies.size(); i++) {
 		enemies[i]->setX(enemies[i]->getX() - 2 - movingOffeset);
-		enemies[i]->incCurrentFrame();
 
 		if (enemies[i]->getX() < enemies[i]->getCurrentFrame()->getWidth() * -1) {
 			enemiesToRemove.push_back(i);
@@ -170,6 +184,22 @@ void moveEnemies(int movingOffeset) {
 
 	for (unsigned int i = enemiesToRemove.size(); i > 0; i--) {
 		enemies.erase(enemies.begin() + enemiesToRemove[i]);
+	}
+}
+
+void moveShots(int movingOffeset) {
+	vector<int> shotsToRemove;
+
+	for (unsigned int i = 0; i < shots.size(); i++) {
+		shots[i]->setX(shots[i]->getX() + 2 - movingOffeset);
+
+		if (shots[i]->getX() < shots[i]->getCurrentFrame()->getWidth() * -1) {
+			shotsToRemove.push_back(i);
+		}
+	}
+
+	for (unsigned int i = shotsToRemove.size(); i > 0; i--) {
+		shots.erase(shots.begin() + shotsToRemove[i]);
 	}
 }
 
@@ -214,8 +244,6 @@ void update() {
 		lastTime = time;
 	}
 
-	player->incCurrentFrame();
-
 	calcGravity(player);
 	for (unsigned int i = 0; i < enemies.size(); i++) {
 		calcGravity(enemies[i]);
@@ -235,6 +263,8 @@ void update() {
 		lastTime = time;
 	}
 
+	moveShots(movingValue);
+
 	generateEnemies();
 	moveEnemies(movingValue);
 }
@@ -252,6 +282,8 @@ void initJogo() {
 	layers[1] = new Layer(backPlatform, 2);
 	layers[2] = new Layer(platform, 1);
 	layers[3] = new Layer(ground, 0);
+
+	enemySpr = GraphicReader::readImage("Graphics/enemy.png");
 }
 
 void initPersonagem(void) {
