@@ -15,6 +15,7 @@ public:
 		(*sprite).subImage(animRun->getFrame(4), 309, (*sprite).getHeight() - 1 - 96 - 1);
 		(*sprite).subImage(animRun->getFrame(5), 386, (*sprite).getHeight() - 1 - 96 - 1);
 		(*sprite).subImage(animRun->getFrame(6), 463, (*sprite).getHeight() - 1 - 96 - 1);
+		animRun->setLoopFrom(3);
 	}
 
 	Animation* getCurrentAnimation() {

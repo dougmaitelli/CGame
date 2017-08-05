@@ -15,17 +15,8 @@ public:
 	virtual void initAnimations(Image* sprite) = 0;
 	virtual Animation* getCurrentAnimation() = 0;
 
-	double lastTime = 0;
 	Image* getCurrentFrame() {
-		double time = glfwGetTime();
-		double elapsedSeconds = time - lastTime;
-
-		if (elapsedSeconds > 0.1) {
-			currentFrame = (currentFrame + 1) % (*getCurrentAnimation()).getNum();
-			lastTime = time;
-		}
-
-		return (*getCurrentAnimation()).getFrame(currentFrame);
+		return getCurrentAnimation()->getCurrentFrame();
 	}
 
 	int getX(void) {
@@ -58,7 +49,6 @@ public:
 
 	void setMoving(bool moving) {
 		this->moving = moving;
-		currentFrame = 0;
 	}
 
 	int getJumping() {
@@ -67,7 +57,6 @@ public:
 
 	void setJumping(int jumping) {
 		this->jumping = jumping;
-		currentFrame = 0;
 	}
 
 	bool isFalling() {
@@ -76,14 +65,9 @@ public:
 
 	void setFalling(bool falling) {
 		this->falling = falling;
-		currentFrame = 0;
 	}
 
 	void startShooting() {
-		if (!moving) {
-			currentFrame = 0;
-		}
-
 		shooting = true;
 	}
 
@@ -97,7 +81,6 @@ public:
 
 private:
 	Image* sprite;
-	int currentFrame = 0;
 
 	int posX, posY;
 	int direction = 0;

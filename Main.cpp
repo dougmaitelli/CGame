@@ -34,6 +34,10 @@ Image* enemySpr;
 vector<Enemy*> enemies;
 
 int getGroundY(Layer* layer, int x, int layerOffset) {
+	if (x < 0) {
+		return 0;
+	}
+
 	int groundY = 0;
 
 	bool groundStart = false;
@@ -104,6 +108,16 @@ void scroll(bool plus, int value) {
 	}
 }
 
+void shot() {
+	Shot* shot = new Shot();
+	shot->init(GraphicReader::readImage("Graphics/shot.png"));
+	shot->setX(player->getX() + 50);
+	shot->setY(player->getY());
+	shot->setDirection(1);
+
+	shots.push_back(shot);
+}
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) {
 		if(key == GLFW_KEY_ESCAPE)
@@ -127,14 +141,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 		if (key == GLFW_KEY_LEFT_CONTROL) {
 			player->startShooting();
-
-			Shot* shot = new Shot();
-			shot->init(GraphicReader::readImage("Graphics/shot.png"));
-			shot->setX(player->getX() + 50);
-			shot->setY(player->getY());
-			shot->setDirection(1);
-
-			shots.push_back(shot);
+			shot();
 		}
 	} else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
@@ -183,7 +190,7 @@ void moveEnemies(int movingOffeset) {
 	}
 
 	for (unsigned int i = enemiesToRemove.size(); i > 0; i--) {
-		enemies.erase(enemies.begin() + enemiesToRemove[i]);
+		enemies.erase(enemies.begin() + enemiesToRemove[i - 1]);
 	}
 }
 
@@ -191,15 +198,15 @@ void moveShots(int movingOffeset) {
 	vector<int> shotsToRemove;
 
 	for (unsigned int i = 0; i < shots.size(); i++) {
-		shots[i]->setX(shots[i]->getX() + 2 - movingOffeset);
+		shots[i]->setX(shots[i]->getX() + 7 - movingOffeset);
 
-		if (shots[i]->getX() < shots[i]->getCurrentFrame()->getWidth() * -1) {
+		if (shots[i]->getX() < shots[i]->getCurrentFrame()->getWidth() * -1 || shots[i]->getX() > GAME_WIDTH) {
 			shotsToRemove.push_back(i);
 		}
 	}
 
 	for (unsigned int i = shotsToRemove.size(); i > 0; i--) {
-		shots.erase(shots.begin() + shotsToRemove[i]);
+		shots.erase(shots.begin() + shotsToRemove[i - 1]);
 	}
 }
 
@@ -256,6 +263,8 @@ void update() {
 			if (player->getX() < 0) {
 				player->setX(0);
 			}
+
+			movingValue = 0;
 		} else {
 			scroll(false, movingValue);
 		}
