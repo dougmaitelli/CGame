@@ -89,6 +89,7 @@
     <ClInclude Include="src\Graphics\GraphicReader.h" />
     <ClInclude Include="src\Layer.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Shot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

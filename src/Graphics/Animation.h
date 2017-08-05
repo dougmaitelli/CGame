@@ -11,24 +11,53 @@ class Animation {
 public:
 	Animation() {}
 
-	Animation(int numFrames, int width, int height) {
+	Animation(unsigned int numFrames, int width, int height) {
 		for (int i = 0; i < numFrames; i++) {
 			frames.push_back(new Image(width, height));
 		}
 		num = frames.size();
 	}
 
-	Image * getFrame(int number) {
+	Image* getFrame(unsigned int number) {
 		return frames.at(number);
 	}
 
-	int getNum(void) {
+	unsigned int getNum() {
 		return num;
+	}
+
+	unsigned int getLoopFrom() {
+		return loopFrom;
+	}
+
+	void setLoopFrom(unsigned int loopFrom) {
+		this->loopFrom = loopFrom;
+	}
+
+	Image* getCurrentFrame() {
+		double time = glfwGetTime();
+		double elapsedSeconds = time - lastTime;
+
+		if (elapsedSeconds > 0.1) {
+			currentFrame++;
+
+			if (currentFrame >= num) {
+				currentFrame = loopFrom;
+			}
+
+			lastTime = time;
+		}
+
+		return getFrame(currentFrame);
 	}
 
 private:
 	vector<Image*> frames;
-	int num = 0;
+	unsigned int num = 0;
+	unsigned int loopFrom = 0;
+
+	unsigned int currentFrame = 0;
+	double lastTime = 0;
 };
 
 #endif
