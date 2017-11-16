@@ -5,7 +5,7 @@
 
 ![Game](https://github.com/dougmaitelli/Game2D/raw/master/print.PNG)
 
-## Keyboard shortcuts
+## Controls
 
 ### Movement
 
