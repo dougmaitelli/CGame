@@ -25,7 +25,7 @@ public:
 
 		Image* image = new Image(width, height);
 
-		BYTE* pixmap = new BYTE[width * height * 4];
+		unsigned char* pixmap = new BYTE[width * height * 4];
 		ilCopyPixels(0, 0, 0, width, height, 1, IL_RGBA, IL_UNSIGNED_BYTE, pixmap);
 
 		int a, r, g, b;
