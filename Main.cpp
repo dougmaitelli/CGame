@@ -212,13 +212,13 @@ void moveShots(int movingOffeset) {
 
 void calcGravity(GameObject* obj) {
 	if (obj->getJumping() > 0) {
-		obj->setJumping(player->getJumping() - jumpVelocity);
-		obj->setY(player->getY() + jumpVelocity);
+		obj->setJumping(obj->getJumping() - jumpVelocity);
+		obj->setY(obj->getY() + jumpVelocity);
 	} else if (obj->getY() > 0) {
-		int chaoYS = getHigherGroundY(obj->getX() + 10, obj->getY());
-		int chaoYE = getHigherGroundY(obj->getX() + 60, obj->getY());
+		int groundYS = getHigherGroundY(obj->getX() + 10, obj->getY());
+		int groundYE = getHigherGroundY(obj->getX() + 60, obj->getY());
 
-		int maxGround = max(chaoYS, chaoYE);
+		int maxGround = max(groundYS, groundYE);
 
 		if (obj->getY() > maxGround + 50) {
 			obj->setFalling(true);
