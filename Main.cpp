@@ -120,20 +120,22 @@ void shot() {
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (action == GLFW_PRESS) {
-		if(key == GLFW_KEY_ESCAPE)
+		if (key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 
 		if (player->getJumping() == 0 && !player->isFalling()) {
 			if (key == GLFW_KEY_SPACE) {
 				player->setJumping(jumpStrength);
-			} else if (key == GLFW_KEY_S && player->getY() > getLowerGroundY(player->getX())) {
+			}
+			else if (key == GLFW_KEY_S && player->getY() > getLowerGroundY(player->getX())) {
 				player->setY(player->getY() - 15);
 			}
 
 			if (key == GLFW_KEY_A) {
 				player->setMoving(true);
 				player->setDirection(-1);
-			} else if (key == GLFW_KEY_D) {
+			}
+			else if (key == GLFW_KEY_D) {
 				player->setMoving(true);
 				player->setDirection(1);
 			}
@@ -142,6 +144,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		if (key == GLFW_KEY_LEFT_CONTROL) {
 			player->startShooting();
 			shot();
+		}
+	} else if (action == GLFW_REPEAT) {
+		if (player->getJumping() == 0 && !player->isFalling()) {
+			if (key == GLFW_KEY_A) {
+				player->setMoving(true);
+				player->setDirection(-1);
+			}
+			else if (key == GLFW_KEY_D) {
+				player->setMoving(true);
+				player->setDirection(1);
+			}
 		}
 	} else if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_A || key == GLFW_KEY_D) {
